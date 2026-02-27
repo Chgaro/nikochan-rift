@@ -1,0 +1,69 @@
+{% extends "league/base.html" %}
+{% block title %}{{ season.name }} · Jornada {{ matchday.number }}{% endblock %}
+
+{% block content %}
+  <div class="page-head">
+    <div>
+      <div class="page-title">Jornada {{ matchday.number }}</div>
+      <div class="page-meta">{{ matchday.date }} · {% if matchday.is_closed %}Cerrada{% else %}Abierta{% endif %}</div>
+    </div>
+    <a class="badge" href="{% url 'matchday_list' season.id %}" style="text-decoration:none;">← Volver</a>
+  </div>
+
+  <!-- Mobile cards -->
+  <div class="mobile-only cardlist">
+    {% for sc in scores %}
+      <div class="item">
+        <div class="item-top">
+          <div>
+            <div class="item-title">#{{ forloop.counter }} · {{ sc.player.display_name }}</div>
+            <div class="item-sub">Base {{ sc.points_base }} · Bonus {{ sc.bonus }}</div>
+          </div>
+          <span class="badge"><strong>{{ sc.total_points }}</strong> pts</span>
+        </div>
+
+        <div class="item-kpis">
+          <span class="kpi-chip">W <strong>{{ sc.wins }}</strong></span>
+          <span class="kpi-chip">L <strong>{{ sc.losses }}</strong></span>
+          <span class="kpi-chip">D <strong>{{ sc.draws }}</strong></span>
+        </div>
+      </div>
+    {% empty %}
+      <div class="card muted">No hay resultados cargados para esta jornada.</div>
+    {% endfor %}
+  </div>
+
+  <!-- Desktop table -->
+  <div class="card desktop-only">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="t-center">#</th>
+          <th>Jugador</th>
+          <th class="t-center">W</th>
+          <th class="t-center">L</th>
+          <th class="t-center">D</th>
+          <th class="t-right">Base</th>
+          <th class="t-right">Bonus</th>
+          <th class="t-right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sc in scores %}
+          <tr>
+            <td class="t-center"><strong>{{ forloop.counter }}</strong></td>
+            <td>{{ sc.player.display_name }}</td>
+            <td class="t-center">{{ sc.wins }}</td>
+            <td class="t-center">{{ sc.losses }}</td>
+            <td class="t-center">{{ sc.draws }}</td>
+            <td class="t-right">{{ sc.points_base }}</td>
+            <td class="t-right">{{ sc.bonus }}</td>
+            <td class="t-right"><strong>{{ sc.total_points }}</strong></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="8" class="muted">No hay resultados cargados para esta jornada.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

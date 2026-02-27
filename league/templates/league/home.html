@@ -1,0 +1,108 @@
+{% extends "league/base.html" %}
+{% block title %}Home · Liga{% endblock %}
+
+{% block content %}
+  {% comment %}
+    Home beta: estructura "producto" (hero + temporadas + directo)
+    Mantiene URLs existentes: season_standings / matchday_list.
+  {% endcomment %}
+
+  {% with s=active_season|default:seasons.0 %}
+    <div class="home-hero">
+      <div>
+        <div class="home-hero__title">Liga Nikochan</div>
+        <div class="home-hero__subtitle">Acceso rápido a cada temporada y retransmisión en directo.</div>
+
+        <div class="home-hero__cta">
+          <a class="btn btn-primary" href="{% if s %}{% url 'season_standings' s.id %}{% else %}#{% endif %}">
+            Ver clasificación
+          </a>
+          <a class="btn btn-ghost" href="{% if s %}{% url 'matchday_list' s.id %}{% else %}#{% endif %}">
+            Ver jornadas
+          </a>
+        </div>
+      </div>
+
+      <div class="home-hero__stats">
+        <div class="hero-stat">
+          <div class="hero-stat__label">Temporadas</div>
+          <div class="hero-stat__value">{{ seasons|length }}</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat__label">Stream</div>
+          <div class="hero-stat__value">
+            {% if twitch_channel %}@{{ twitch_channel }}{% else %}No configurado{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endwith %}
+
+  <div class="grid" style="grid-template-columns: 1fr; gap: 14px;">
+    <!-- Temporadas -->
+    <div class="card">
+      <div class="row" style="margin-bottom: 10px;">
+        <div>
+          <strong>Temporadas</strong>
+        </div>
+      </div>
+
+      <div class="cardlist">
+        {% for s in seasons %}
+          <div class="item">
+            <div class="item-top">
+              <div>
+                <div class="item-title">{{ s.name }}</div>
+                <div class="item-sub">{{ s.start_date }} → {{ s.end_date }} · Top {{ s.top_matchdays_limit }}</div>
+              </div>
+              {% if s.is_active %}
+                <span class="badge badge--active">Activa</span>
+              {% else %}
+                <span class="badge badge--inactive">Finalizada</span>
+              {% endif %}     
+            </div>
+
+          <div class="item-kpis home-actions">
+            <a class="btn btn-primary btn-sm" href="{% url 'season_standings' s.id %}">
+              Ver clasificación
+            </a>
+            <a class="btn btn-ghost btn-sm" href="{% url 'matchday_list' s.id %}">
+              Ver jornadas
+            </a>
+          </div>
+          </div>
+        {% empty %}
+          <div class="muted">No hay temporadas creadas todavía.</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Twitch -->
+    <div class="card">
+      <div class="row" style="margin-bottom: 10px;">
+        <div>
+          <strong>Directo</strong>
+          <div class="muted" style="margin-top:4px;">Twitch</div>
+        </div>
+        {% if twitch_channel %}
+          <span class="badge">@{{ twitch_channel }}</span>
+        {% else %}
+          <span class="badge">Sin canal configurado</span>
+        {% endif %}
+      </div>
+
+      {% if twitch_channel %}
+        <div class="embed home-embed">
+          <iframe
+            src="https://player.twitch.tv/?channel={{ twitch_channel }}&parent={{ twitch_parent }}&muted=true"
+            allowfullscreen="true"
+            scrolling="no"
+            frameborder="0">
+          </iframe>
+        </div>
+      {% else %}
+        <div class="muted">Configura <code>TWITCH_CHANNEL</code> en settings para mostrar el directo.</div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

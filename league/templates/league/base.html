@@ -1,0 +1,51 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Liga{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <link rel="icon" href="{% static 'icons/favicon.ico' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/favicon-32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icons/favicon-16.png' %}">
+
+  <meta property="og:title" content="Nikochan League">
+  <meta property="og:description" content="Liga semanal · Clasificación en directo">
+  <meta property="og:image" content="{{ SITE_URL }}{% static 'img/og-image.png' %}">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+  <div class="layout">
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand">
+          <a href="{% url 'home' %}" class="brand-logo" aria-label="Home">
+            <img src="{% static 'img/logo.png' %}" alt="Nikochan" />
+          </a>
+        </div>
+
+        {% if season %}
+        <nav class="nav">
+          <a class="nav-link {% if request.resolver_match.url_name == 'season_standings' %}is-active{% endif %}"
+            href="{% url 'season_standings' season.id %}">Clasificación</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'matchday_list' %}is-active{% endif %}"
+            href="{% url 'matchday_list' season.id %}">Jornadas</a>
+        </nav>
+        {% endif %}
+      </div>
+    </header>
+
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <span class="muted">Stur Dev · v1</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

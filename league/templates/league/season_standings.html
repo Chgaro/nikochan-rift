@@ -1,0 +1,53 @@
+{% extends "league/base.html" %}
+{% block title %}{{ season.name }} · Clasificación{% endblock %}
+
+{% block content %}
+  <div class="page-head">
+    <div>
+      <div class="page-title">Clasificación</div>
+      <div class="page-meta">Puntuación: suma de mejores {{ season.top_matchdays_limit }} jornadas</div>
+    </div>
+    <span class="badge">V {{ season.points_win }} · E {{ season.points_draw }} · D {{ season.points_loss }} · Bonus invicto +{{ season.bonus_undefeated }}</span>
+  </div>
+
+  <!-- Mobile cards -->
+  <div class="mobile-only cardlist">
+    {% for s in standings %}
+      <div class="item">
+        <div class="item-top">
+          <div>
+            <div class="item-title">#{{ forloop.counter }} · {{ s.player.display_name }}</div>
+            <div class="item-sub">Top {{ season.top_matchdays_limit }}</div>
+          </div>
+          <span class="badge"><strong>{{ s.total_points }}</strong> pts</span>
+        </div>
+      </div>
+    {% empty %}
+      <div class="card muted">Aún no hay datos.</div>
+    {% endfor %}
+  </div>
+
+  <!-- Desktop table -->
+  <div class="card desktop-only">
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="t-center">#</th>
+          <th>Jugador</th>
+          <th class="t-right">Puntos</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in standings %}
+          <tr>
+            <td class="t-center"><strong>{{ forloop.counter }}</strong></td>
+            <td>{{ s.player.display_name }}</td>
+            <td class="t-right"><strong>{{ s.total_points }}</strong></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3" class="muted">Aún no hay datos.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

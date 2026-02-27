@@ -1,0 +1,31 @@
+{% extends "league/base.html" %}
+{% block title %}{{ season.name }} · Jornadas{% endblock %}
+
+{% block content %}
+  <div class="page-head">
+    <div>
+      <div class="page-title">Jornadas</div>
+      <div class="page-meta">Listado de jornadas de la temporada</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    {% for md in matchdays %}
+      <a class="card" href="{% url 'matchday_detail' season.id md.id %}" style="text-decoration:none;">
+        <div class="row">
+          <div>
+            <strong>Jornada {{ md.number }}</strong>
+            <div class="muted" style="margin-top:4px;">{{ md.date }}</div>
+          </div>
+          {% if md.is_closed %}
+            <span class="badge badge--closed">Cerrada</span>
+          {% else %}
+            <span class="badge badge--open">Abierta</span>
+          {% endif %}
+        </div>
+      </a>
+    {% empty %}
+      <div class="card muted">No hay jornadas creadas.</div>
+    {% endfor %}
+  </div>
+{% endblock %}
