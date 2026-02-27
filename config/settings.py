@@ -47,6 +47,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -123,3 +125,9 @@ TWITCH_CHANNEL = os.getenv("TWITCH_CHANNEL", "j4npu")
 TWITCH_PARENT = os.getenv("TWITCH_PARENT", "127.0.0.1")
 
 SITE_URL = os.getenv("SITE_URL", "http://127.0.0.1:8000")
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    }
+}
