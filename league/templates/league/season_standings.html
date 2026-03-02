@@ -17,9 +17,12 @@
         <div class="item-top">
           <div>
             <div class="item-title">#{{ forloop.counter }} · {{ s.player.display_name }}</div>
-            <div class="item-sub">Top {{ season.top_matchdays_limit }}</div>
           </div>
-          <span class="badge"><strong>{{ s.total_points }}</strong> pts</span>
+
+          <div style="display:flex; gap:8px; align-items:center;">
+            <span class="badge">Jornadas: <strong>{{ s.played }}</strong></span>
+            <span class="badge"><strong>{{ s.total_points }}</strong> pts</span>
+          </div>
         </div>
       </div>
     {% empty %}
@@ -47,7 +50,7 @@
             <td class="t-right"><strong>{{ s.total_points }}</strong></td>
           </tr>
         {% empty %}
-          <tr><td colspan="3" class="muted">Aún no hay datos.</td></tr>
+          <tr><td colspan="4" class="muted">Aún no hay datos.</td></tr>
         {% endfor %}
       </tbody>
     </table>
