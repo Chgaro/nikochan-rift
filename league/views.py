@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render
+from django.db.models import Count, Q
 from .models import Season, Standing, Matchday, MatchdayScore
 
 def home(request):
@@ -14,12 +15,21 @@ def home(request):
 
 def season_standings(request, season_id):
     season = get_object_or_404(Season, id=season_id)
+
     standings = (
         Standing.objects
         .filter(season=season)
         .select_related("player")
+        .annotate(
+            played=Count(
+                "player__matchdayscore",
+                filter=Q(player__matchdayscore__season=season),
+                distinct=True,
+            )
+        )
         .order_by("-total_points", "player__display_name")
     )
+
     return render(request, "league/season_standings.html", {"season": season, "standings": standings})
 
 

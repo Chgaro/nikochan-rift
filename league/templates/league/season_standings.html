@@ -34,6 +34,7 @@
         <tr>
           <th class="t-center">#</th>
           <th>Jugador</th>
+          <th class="t-right">Jornadas</th>
           <th class="t-right">Puntos</th>
         </tr>
       </thead>
@@ -42,6 +43,7 @@
           <tr>
             <td class="t-center"><strong>{{ forloop.counter }}</strong></td>
             <td>{{ s.player.display_name }}</td>
+            <td class="t-right"><strong>{{ s.played }}</strong></td>
             <td class="t-right"><strong>{{ s.total_points }}</strong></td>
           </tr>
         {% empty %}
