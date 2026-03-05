@@ -491,5 +491,11 @@ a{ color: inherit; }
   vertical-align:middle;
 }
 
+@media (max-width: 700px){
+  .home-stats-grid{
+    grid-template-columns: 1fr !important;
+  }
+}
+
 .badge--active::before{ background:#22c55e; }
 .badge--inactive::before{ background:#ef4444; }

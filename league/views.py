@@ -5,10 +5,42 @@ from .models import Season, Standing, Matchday, MatchdayScore
 
 def home(request):
     seasons = Season.objects.order_by("-start_date")
-    active_season = seasons.filter(is_active=True).first()
+    active_season = seasons.filter(is_active=True).first() or seasons.first()
+
+    stats = None
+    if active_season:
+        players_count = (
+            MatchdayScore.objects
+            .filter(season=active_season)
+            .values("player_id")
+            .distinct()
+            .count()
+        )
+
+        matchdays_total = Matchday.objects.filter(season=active_season).count()
+        matchdays_closed = Matchday.objects.filter(season=active_season, is_closed=True).count()
+
+        leader = (
+            Standing.objects
+            .filter(season=active_season)
+            .select_related("player")
+            .order_by("-total_points", "player__display_name")
+            .first()
+        )
+
+        stats = {
+            "season_name": active_season.name,
+            "players_count": players_count,
+            "matchdays_closed": matchdays_closed,
+            "matchdays_total": matchdays_total,
+            "leader_name": leader.player.display_name if leader else None,
+            "leader_points": leader.total_points if leader else None,
+        }
+
     return render(request, "league/home.html", {
         "seasons": seasons,
         "active_season": active_season,
+        "stats": stats,
         "twitch_channel": settings.TWITCH_CHANNEL,
         "twitch_parent": settings.TWITCH_PARENT,
     })
@@ -59,3 +91,6 @@ def matchday_detail(request, season_id, matchday_id):
         "league/matchday_detail.html",
         {"season": season, "matchday": matchday, "scores": scores},
     )
+    
+def normativa(request):
+    return render(request, "league/normativa.html")

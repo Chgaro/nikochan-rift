@@ -20,20 +20,46 @@
           <a class="btn btn-ghost" href="{% if s %}{% url 'matchday_list' s.id %}{% else %}#{% endif %}">
             Ver jornadas
           </a>
+          <a class="btn btn-ghost" href="{% if s %}{% url 'normativa' %}{% else %}#{% endif %}">
+            Normativa
+          </a>          
         </div>
       </div>
 
       <div class="home-hero__stats">
-        <div class="hero-stat">
-          <div class="hero-stat__label">Temporadas</div>
-          <div class="hero-stat__value">{{ seasons|length }}</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat__label">Stream</div>
-          <div class="hero-stat__value">
-            {% if twitch_channel %}@{{ twitch_channel }}{% else %}No configurado{% endif %}
+        {% if stats %}
+          <div class="hero-stat">
+            <div class="hero-stat__label">👥 Jugadores</div>
+            <div class="hero-stat__value">{{ stats.players_count }}</div>
           </div>
-        </div>
+
+          <div class="hero-stat">
+            <div class="hero-stat__label">📅 Jornadas</div>
+            <div class="hero-stat__value">{{ stats.matchdays_closed }} / {{ stats.matchdays_total }}</div>
+          </div>
+
+          <div class="hero-stat">
+            <div class="hero-stat__label">🏆 Líder</div>
+            <div class="hero-stat__value">
+              {% if stats.leader_name %}
+                {{ stats.leader_name }} · {{ stats.leader_points }} pts
+              {% else %}
+                Sin datos
+              {% endif %}
+            </div>
+          </div>
+        {% else %}
+          <div class="hero-stat">
+            <div class="hero-stat__label">Temporadas</div>
+            <div class="hero-stat__value">{{ seasons|length }}</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat__label">Stream</div>
+            <div class="hero-stat__value">
+              {% if twitch_channel %}@{{ twitch_channel }}{% else %}No configurado{% endif %}
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
   {% endwith %}

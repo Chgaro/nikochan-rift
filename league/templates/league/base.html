@@ -32,6 +32,7 @@
             href="{% url 'season_standings' season.id %}">Clasificación</a>
           <a class="nav-link {% if request.resolver_match.url_name == 'matchday_list' %}is-active{% endif %}"
             href="{% url 'matchday_list' season.id %}">Jornadas</a>
+          <a class="nav-link" href="{% url 'normativa' %}">Normativa</a>
         </nav>
         {% endif %}
       </div>
