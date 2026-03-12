@@ -26,15 +26,24 @@
           </a>
         </div>
 
-        {% if season %}
-        <nav class="nav">
-          <a class="nav-link {% if request.resolver_match.url_name == 'season_standings' %}is-active{% endif %}"
-            href="{% url 'season_standings' season.id %}">Clasificación</a>
-          <a class="nav-link {% if request.resolver_match.url_name == 'matchday_list' %}is-active{% endif %}"
-            href="{% url 'matchday_list' season.id %}">Jornadas</a>
-          <a class="nav-link" href="{% url 'normativa' %}">Normativa</a>
-        </nav>
-        {% endif %}
+      {% if season %}
+      <nav class="nav">
+        <a class="nav-link {% if request.resolver_match.url_name == 'season_standings' %}is-active{% endif %}"
+          href="{% url 'season_standings' season.id %}">
+          Clasificación
+        </a>
+
+        <a class="nav-link {% if request.resolver_match.url_name == 'matchday_list' or request.resolver_match.url_name == 'matchday_detail' %}is-active{% endif %}"
+          href="{% url 'matchday_list' season.id %}">
+          Jornadas
+        </a>
+
+        <a class="nav-link {% if request.resolver_match.url_name == 'normativa' %}is-active{% endif %}"
+          href="{% url 'normativa' %}">
+          Normativa
+        </a>
+      </nav>
+      {% endif %}
       </div>
     </header>
 

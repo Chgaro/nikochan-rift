@@ -95,4 +95,7 @@ def matchday_detail(request, season_id, matchday_id):
     )
     
 def normativa(request):
-    return render(request, "league/normativa.html")
+    season = Season.objects.order_by("-id").first()
+    return render(request, "league/normativa.html", {
+        "season": season,
+    })
