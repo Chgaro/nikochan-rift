@@ -14,13 +14,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from pathlib import Path
+
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path, include, re_path
-from django.views.static import serve
+from django.http import FileResponse, Http404
+from django.urls import include, path, re_path
+
+
+def media_file(request, path):
+    file_path = Path(settings.MEDIA_ROOT) / path
+    if file_path.is_file():
+        return FileResponse(open(file_path, "rb"))
+    raise Http404("Media file not found")
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("league.urls")),
-    re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
+    re_path(r"^media/(?P<path>.*)$", media_file),
 ]
