@@ -18,15 +18,16 @@ from pathlib import Path
 
 from django.conf import settings
 from django.contrib import admin
-from django.http import FileResponse, Http404
+from django.http import HttpResponse
 from django.urls import include, path, re_path
 
 
 def media_file(request, path):
     file_path = Path(settings.MEDIA_ROOT) / path
-    if file_path.is_file():
-        return FileResponse(open(file_path, "rb"))
-    raise Http404("Media file not found")
+    return HttpResponse(
+        f"MEDIA HIT<br>path={path}<br>full={file_path}<br>exists={file_path.exists()}",
+        content_type="text/html",
+    )
 
 
 urlpatterns = [
