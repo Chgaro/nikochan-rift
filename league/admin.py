@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db import transaction
 
-from .models import Season, Player, Matchday, Match, MatchdayScore, Standing
+from .models import Season, Player, Matchday, Match, MatchdayScore, Standing, Sponsor
 from .services.standings import recalc_matchday_scores, rebuild_season_standings
 
 
@@ -164,3 +164,9 @@ class MatchAdmin(admin.ModelAdmin):
     list_filter = ("matchday__season", "matchday")
     search_fields = ("player_a__display_name", "player_b__display_name")
     autocomplete_fields = ("matchday", "player_a", "player_b")
+    
+@admin.register(Sponsor)
+class SponsorAdmin(admin.ModelAdmin):
+    list_display = ("name", "order", "is_active")
+    list_editable = ("order", "is_active")
+    search_fields = ("name",)

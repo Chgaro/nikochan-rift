@@ -130,5 +130,43 @@
         <div class="muted">Configura <code>TWITCH_CHANNEL</code> en settings para mostrar el directo.</div>
       {% endif %}
     </div>
+
+    <!-- Sponsors -->
+    {% if sponsors %}
+      <section class="home-section sponsors-section">
+        <div class="home-card sponsors-panel">
+          <div class="section-header">
+            <h2>Sponsors</h2>
+            <p>Gracias a quienes apoyan la liga.</p>
+          </div>
+
+          <div class="sponsors-grid">
+            {% for sponsor in sponsors %}
+              <a
+                class="sponsor-item"
+                href="{{ sponsor.url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Ir a la web de {{ sponsor.name }}"
+              >
+                <div class="sponsor-item__box">
+                  {% if sponsor.image %}
+                    <img
+                      src="{{ sponsor.image.url }}"
+                      alt="{{ sponsor.name }}"
+                      class="sponsor-item__logo"
+                    >
+                  {% endif %}
+                </div>
+
+                <div class="sponsor-item__name">
+                  {{ sponsor.name }}
+                </div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
   </div>
 {% endblock %}

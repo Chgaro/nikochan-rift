@@ -91,3 +91,16 @@ class Standing(models.Model):
 
     def __str__(self):
         return f"{self.player} - {self.total_points} pts"
+    
+class Sponsor(models.Model):
+    name = models.CharField(max_length=120)
+    url = models.URLField()
+    image = models.ImageField(upload_to="sponsors/", blank=True, null=True)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.name

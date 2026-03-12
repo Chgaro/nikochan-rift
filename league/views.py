@@ -1,11 +1,12 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render
 from django.db.models import Count, Q
-from .models import Season, Standing, Matchday, MatchdayScore
+from .models import Season, Standing, Matchday, MatchdayScore, Sponsor
 
 def home(request):
     seasons = Season.objects.order_by("-start_date")
     active_season = seasons.filter(is_active=True).first() or seasons.first()
+    sponsors = Sponsor.objects.filter(is_active=True)
 
     stats = None
     if active_season:
@@ -43,6 +44,7 @@ def home(request):
         "stats": stats,
         "twitch_channel": settings.TWITCH_CHANNEL,
         "twitch_parent": settings.TWITCH_PARENT,
+        "sponsors": sponsors,
     })
 
 def season_standings(request, season_id):
