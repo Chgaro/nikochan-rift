@@ -31,6 +31,6 @@ def media_file(request, path):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("league.urls")),
     re_path(r"^media/(?P<path>.*)$", media_file),
+    path("", include("league.urls")),
 ]
