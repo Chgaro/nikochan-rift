@@ -64,13 +64,13 @@ class PlayerAdmin(admin.ModelAdmin):
 
 @admin.register(Matchday)
 class MatchdayAdmin(admin.ModelAdmin):
-    list_display = ("season", "number", "date", "is_closed")
-    list_filter = ("season", "is_closed")
+    list_display = ("season", "number", "date", "score_multiplier", "is_closed")
+    list_filter = ("season", "is_closed", "score_multiplier")
     search_fields = ("season__name",)
     autocomplete_fields = ("season",)
     inlines = [MatchdayScoreInline]
     actions = ("close_matchdays_and_rebuild", "reopen_matchdays", "rebuild_selected_matchdays")
-    
+
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
 
@@ -164,7 +164,8 @@ class MatchAdmin(admin.ModelAdmin):
     list_filter = ("matchday__season", "matchday")
     search_fields = ("player_a__display_name", "player_b__display_name")
     autocomplete_fields = ("matchday", "player_a", "player_b")
-    
+
+
 @admin.register(Sponsor)
 class SponsorAdmin(admin.ModelAdmin):
     list_display = ("name", "order", "is_active")

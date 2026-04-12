@@ -5,9 +5,18 @@
   <div class="page-head">
     <div>
       <div class="page-title">Jornada {{ matchday.number }}</div>
-      <div class="page-meta">{{ matchday.date }} · {% if matchday.is_closed %}Cerrada{% else %}Abierta{% endif %}</div>
+      <div class="page-meta">
+        {{ matchday.date }} · {% if matchday.is_closed %}Cerrada{% else %}Abierta{% endif %}
+        {% if matchday.has_special_multiplier %} · Jornada especial {{ matchday.multiplier_label }}{% endif %}
+      </div>
     </div>
-    <a class="badge" href="{% url 'matchday_list' season.id %}" style="text-decoration:none;">← Volver</a>
+
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      {% if matchday.has_special_multiplier %}
+        <span class="badge badge--multiplier">Multiplicador {{ matchday.multiplier_label }}</span>
+      {% endif %}
+      <a class="badge" href="{% url 'matchday_list' season.id %}" style="text-decoration:none;">← Volver</a>
+    </div>
   </div>
 
   <!-- Mobile cards -->
@@ -17,7 +26,10 @@
         <div class="item-top">
           <div>
             <div class="item-title">#{{ forloop.counter }} · {{ sc.player.display_name }}</div>
-            <div class="item-sub">Base {{ sc.points_base }} · Bonus {{ sc.bonus }}</div>
+            <div class="item-sub">
+              Base {{ sc.points_base }} · Bonus {{ sc.bonus }}
+              {% if matchday.has_special_multiplier %} · {{ matchday.multiplier_label }}{% endif %}
+            </div>
           </div>
           <span class="badge"><strong>{{ sc.total_points }}</strong> pts</span>
         </div>
@@ -58,7 +70,12 @@
             <td class="t-center">{{ sc.draws }}</td>
             <td class="t-right">{{ sc.points_base }}</td>
             <td class="t-right">{{ sc.bonus }}</td>
-            <td class="t-right"><strong>{{ sc.total_points }}</strong></td>
+            <td class="t-right">
+              <strong>{{ sc.total_points }}</strong>
+              {% if matchday.has_special_multiplier %}
+                <span class="muted" style="font-size:12px; margin-left:6px;">({{ matchday.multiplier_label }})</span>
+              {% endif %}
+            </td>
           </tr>
         {% empty %}
           <tr><td colspan="8" class="muted">No hay resultados cargados para esta jornada.</td></tr>

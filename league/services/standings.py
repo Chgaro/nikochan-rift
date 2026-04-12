@@ -7,12 +7,16 @@ def recalc_matchday_scores(matchday):
     """
     Recalcula points_base/bonus/total_points de los MatchdayScore existentes
     para esa jornada (input manual W/D/L).
+
+    total_points aplica el multiplicador de la jornada:
+    total_points = (points_base + bonus) * matchday.score_multiplier
     """
     season = matchday.season
     W = season.points_win
     D = season.points_draw
     L = season.points_loss
     BONUS = season.bonus_undefeated
+    multiplier = matchday.score_multiplier or 1
 
     qs = MatchdayScore.objects.filter(matchday=matchday).select_related("season")
 
@@ -21,7 +25,7 @@ def recalc_matchday_scores(matchday):
             played = sc.wins + sc.draws + sc.losses
             points_base = (sc.wins * W) + (sc.draws * D) + (sc.losses * L)
             bonus = BONUS if (played > 0 and sc.losses == 0) else 0
-            total = points_base + bonus
+            total = (points_base + bonus) * multiplier
 
             MatchdayScore.objects.filter(pk=sc.pk).update(
                 points_base=points_base,

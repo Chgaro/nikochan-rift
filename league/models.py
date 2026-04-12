@@ -34,13 +34,26 @@ class Matchday(models.Model):
     number = models.IntegerField()
     date = models.DateField()
     is_closed = models.BooleanField(default=False)
+    score_multiplier = models.PositiveSmallIntegerField(
+        default=1,
+        help_text="1 = puntuación normal, 2 = doble puntuación, etc.",
+    )
 
     class Meta:
         unique_together = ("season", "number")
         ordering = ["number"]
 
+    @property
+    def has_special_multiplier(self):
+        return self.score_multiplier > 1
+
+    @property
+    def multiplier_label(self):
+        return f"x{self.score_multiplier}"
+
     def __str__(self):
-        return f"{self.season.name} - Jornada {self.number}"
+        suffix = f" ({self.multiplier_label})" if self.has_special_multiplier else ""
+        return f"{self.season.name} - Jornada {self.number}{suffix}"
 
 
 class Match(models.Model):
@@ -91,7 +104,8 @@ class Standing(models.Model):
 
     def __str__(self):
         return f"{self.player} - {self.total_points} pts"
-    
+
+
 class Sponsor(models.Model):
     name = models.CharField(max_length=120)
     url = models.URLField()
